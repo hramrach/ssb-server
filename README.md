@@ -20,7 +20,41 @@ If you are looking to use ssb-server to run a pub, consider using [ssb-minimal-p
 
 ## Install
 
-How to Install `ssb-server` and create a working pub 
+How to Install `ssb-server` and create a working pub
+
+1. install npm10 from your distribution `apt-get install npm10`
+
+2. make node10 the default version `update-alternatives --set node-default /usr/bin/node10`
+
+3. make npm10 the default version `update-alternatives --set npm-default /usr/bin/npm10`
+
+4. install development tools `apt-get install autotools-dev automake`
+
+5. install node-gyp `npm install node-gyp`
+
+6. install ssb-server `npm install`
+
+7. create a start script for ssb-server
+
+```
+mkdir -p ~/bin
+cat > ~/bin/run-ssb-server <<END
+#!/bin/bash
+cd $PWD
+while true; do
+  node bin start ssb-server start
+  sleep 3
+done
+END
+cat > ~/bin/ssb-server <<END
+#!/bin/bash
+cd $PWD
+node bin "\$@"
+END
+chmod 755 ~/bin/run-ssb-server ~/bin/ssb-server
+```
+
+If your distribution does not provide npm or you don't want to use it you can install using nvm
 
 1. `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash`
 
@@ -36,7 +70,7 @@ How to Install `ssb-server` and create a working pub
 ```
 npm install -g ssb-server
 ```
-7. `nano ~/run-server.sh` and input:
+7. `nano ~/bin/run-ssb-server` and input:
 
 ```
 #!/bin/bash
@@ -45,8 +79,9 @@ while true; do
   sleep 3
 done
 ```
+chmod 755 ~/bin/run-ssb-server
 
-Be sure to start the pub server from this script (as shown in step 10), as this script will run the pub server and restart it even if it crashes.      
+Be sure to start the pub server from this script (as shown in step 10), as this script will run the pub server and restart it even if it crashes.
 
 8. `mkdir ~/.ssb/`
 
@@ -67,7 +102,7 @@ Be sure to start the pub server from this script (as shown in step 10), as this 
 }
 ```
 
-10. Now run `sh ~/run-server.sh` in a detachable  session (e.g. screens)
+10. Now run `~/bin/run-ssb-server` in a detachable  session (e.g. screens)
 
 11. Detach the session and run `ssb-server whoami` to check to see if the server is working.
 
